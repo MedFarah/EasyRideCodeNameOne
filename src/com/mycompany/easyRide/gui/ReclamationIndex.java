@@ -200,16 +200,13 @@ public class ReclamationIndex extends Form {
                         Object op[][] = new Object[100][100];//listR.toArray();
                         int i = 1;
                         for (Reclamation r : rec) {
-//                                   int deviceWidth = Display.getInstance().getDisplayWidth();
-//        Image placeholder = Image.createImage(deviceWidth, deviceWidth, 0xbfc9d2);
-//        EncodedImage enc = EncodedImage.createFromImage(placeholder, false);
-//        //EncodedImage placeholder, String storageFile, String url
-//        Image img4 = URLImage.createToStorage(enc,"Medium_"+"http://localhost:8080/pi-project/web/uploads/photos/"+r.getImage(), "http://localhost:8080/pi-project/web/uploads/photos/"+r.getImage());
-//        ImageViewer im = new ImageViewer(img4);
-//        /
+
+                            //
                             op[i][0] = r.getObjet();
                             op[i][1] = r.getTypeReclamation();
-                            op[i][2] = r.getEmail();
+                            op[i][2] = r.getEmail();;
+                            // 
+                            // op[i][3]=im;
                             i++;
                         }
                         /*  hi.add(new Label("Type")).
@@ -455,7 +452,7 @@ public class ReclamationIndex extends Form {
                                 for (Reclamation d : rec) {
                                     if (d.getEmail() != null && d.getEmail().contains(text)) {
                                         //something here
-                                        Form f = new Form("Update Reclamation");
+                                        Form f = new Form(" Reclamation");
                                         f.addComponent(new Label("Email"));
                                         TextField email = new TextField("", "email");
                                         email.setText(d.getEmail());
@@ -476,8 +473,15 @@ public class ReclamationIndex extends Form {
                                         f.addComponent(new Label("Type Reclamation"));
                                         TextField type = new TextField("", "Type");
                                         type.setText(d.getTypeReclamation());
-
                                         f.add(type);
+                                        f.addComponent(new Label("Image "));
+                                        int deviceWidth = Display.getInstance().getDisplayWidth();
+                                        Image placeholder = Image.createImage(deviceWidth, deviceWidth, 0xbfc9d2);
+                                        EncodedImage enc = EncodedImage.createFromImage(placeholder, false);
+                                        //EncodedImage placeholder, String storageFile, String url
+                                        Image img4 = URLImage.createToStorage(enc, "Medium_" + "http://localhost:8080/pi-project/web/uploads/photos/" + d.getImage(), "http://localhost:8080/pi-project/web/uploads/photos/" + d.getImage());
+                                        ImageViewer im = new ImageViewer(img4);
+                                        f.add(im);
                                         f.getToolbar().addCommandToOverflowMenu("Retour", null, new ActionListener() {
 
                                             @Override

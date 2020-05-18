@@ -6,6 +6,7 @@
 package com.mycompany.easyRide.gui;
 
 import com.codename1.components.FloatingHint;
+import com.codename1.components.ImageViewer;
 import com.codename1.components.ToastBar;
 import com.codename1.db.Database;
 import com.codename1.io.CharArrayReader;
@@ -24,6 +25,7 @@ import com.codename1.ui.Component;
 import com.codename1.ui.Container;
 import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
+import com.codename1.ui.EncodedImage;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Image;
@@ -32,6 +34,7 @@ import com.codename1.ui.TextArea;
 import com.codename1.ui.TextComponent;
 import com.codename1.ui.TextField;
 import com.codename1.ui.Toolbar;
+import com.codename1.ui.URLImage;
 import com.codename1.ui.events.ActionEvent;
 import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
@@ -82,7 +85,7 @@ public class NewReclamation extends Form {
         combobox.addItem("Evenement");
         combobox.addItem("Maintenance");
         combobox.addItem("Commande");
-
+   
         add(e).add(email).add(objet).add(combobox).add(img).add(btn);
 
         btn.addActionListener((evt) -> {
