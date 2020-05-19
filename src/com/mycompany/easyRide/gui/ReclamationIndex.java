@@ -204,7 +204,8 @@ public class ReclamationIndex extends Form {
                             //
                             op[i][0] = r.getObjet();
                             op[i][1] = r.getTypeReclamation();
-                            op[i][2] = r.getEmail();;
+                            op[i][2] = r.getEmail();
+                            op[i][3] = r.getId();
                             // 
                             // op[i][3]=im;
                             i++;
@@ -233,18 +234,76 @@ public class ReclamationIndex extends Form {
                                 Component cell = null;
                                 for (int i = 0; i < rec.size(); i++) {
                                     if (column == 2) { // (2)
+                                        
                                         Picker p = new Picker();
                                         p.setType(Display.PICKER_TYPE_STRINGS);
                                         p.setStrings("Votre Reclamation a été traité", "Votre Reclamation est en cours de traitement", "Reclamation en attente", "Reclamation refusée");
                                         p.setSelectedString((String) value); // (3)
-                                        p.setUIID("" + i);
+                                        p.setUIID("" + l);
                                         p.addActionListener((e) -> {
-                                            getModel().setValueAt(row, column, p.getSelectedString());
+                                           getModel().setValueAt(row, column, p.getSelectedString());
                                             Message m = new Message(p.getSelectedString());
-                                            int a = Integer.parseInt(p.getUIID().trim());
-                                            Display.getInstance().sendMessage(new String[]{getModel().getValueAt(a, 2).toString()}, "EasyRide Reclamation ", m);
+                                           Display.getInstance().sendMessage(new String[]{getModel().getValueAt(row, 2).toString()}, "EasyRide Reclamation ", m);
+                                          System.out.println("$$$$$$$$$ "+(row - 1)+" ========>"+getModel().getValueAt(row, 2).toString());
+                                            if( p.getSelectedString().equals("Reclamation refusée") ){
+                                            ConnectionRequest con = new ConnectionRequest();
+                                            con.setUrl("http://localhost:8000/reclamation/" + rec.get(row - 1).getId() + "/deleteCodeName?s=1");
+                                            con.setPost(false);
+                                            //  con.addArgument("description", desc.getText().toString());
 
-                                        }); // (4)
+                                            con.addResponseListener(new ActionListener<NetworkEvent>() {
+                                                @Override
+                                                public void actionPerformed(NetworkEvent evt) {
+
+                                                    boolean resultOK = con.getResponseCode() == 200; //Code HTTP 200 OK
+                                                    con.removeResponseListener(this);
+                                                    if (resultOK) {
+                                                        Dialog.show("Alert", "Reclamation supprimée avec succes", new Command("OK"));
+                                                        ReclamationIndex ri = new ReclamationIndex();
+                                                        ri.show();
+
+                                                    } else {
+                                                        Dialog.show("Alert", "error", new Command("OK"));
+                                                        System.out.println("*****" + resultOK);
+
+                                                    }
+
+                                                }
+                                            });
+
+                                            NetworkManager.getInstance().addToQueue(con);
+                                            //finvalider action
+                                            }
+                                            if(p.getSelectedString().equals("Votre Reclamation a été traité") ){//){
+                                                                                            ConnectionRequest con = new ConnectionRequest();
+                                            con.setUrl("http://localhost:8000/reclamation/" + rec.get(row - 1).getId() + "/deleteCodeName?s=0");
+                                            con.setPost(false);
+                                            //  con.addArgument("description", desc.getText().toString());
+
+                                            con.addResponseListener(new ActionListener<NetworkEvent>() {
+                                                @Override
+                                                public void actionPerformed(NetworkEvent evt) {
+
+                                                    boolean resultOK = con.getResponseCode() == 200; //Code HTTP 200 OK
+                                                    con.removeResponseListener(this);
+                                                    if (resultOK) {
+                                                        Dialog.show("Alert", "Reclamation traiter avec succes", new Command("OK"));
+                                                        ReclamationIndex ri = new ReclamationIndex();
+                                                        ri.show();
+
+                                                    } else {
+                                                        Dialog.show("Alert", "error", new Command("OK"));
+                                                        System.out.println("*****" + resultOK);
+
+                                                    }
+
+                                                }
+                                            });
+
+                                            NetworkManager.getInstance().addToQueue(con);
+                                            //finvalider action
+                                            } 
+                                        }); // (4) 
 
                                         cell = p;
 
@@ -384,7 +443,7 @@ public class ReclamationIndex extends Form {
                                         cell.addPointerPressedListener((evt) -> {
 
                                             ConnectionRequest con = new ConnectionRequest();
-                                            con.setUrl("http://localhost:8000/reclamation/" + rec.get(row - 1).getId() + "/deleteCodeName");
+                                            con.setUrl("http://localhost:8000/reclamation/" + rec.get(row - 1).getId() + "/deleteCodeName?s=1");
                                             con.setPost(false);
                                             //  con.addArgument("description", desc.getText().toString());
 
